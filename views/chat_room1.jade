@@ -1,0 +1,13 @@
+doctype html
+html
+	head
+		title #{pageTitle}
+		style
+			include ../public/css/style.css
+	body
+		script
+			include ../public/Javascript/client_script.js
+		ul#messages
+		form(action="")
+			input#m(autocomplete="off")
+			button Send
