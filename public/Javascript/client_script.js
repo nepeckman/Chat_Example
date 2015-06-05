@@ -1,6 +1,5 @@
 ///<reference path='../libs/socket.io-client.d.ts' />
 ///<reference path='../libs/jquery.d.ts' />
-var io;
 var socket = io();
 $('form').submit(function () {
     socket.emit('chat message', $('#m').val());
