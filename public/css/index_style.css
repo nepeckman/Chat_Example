@@ -1,0 +1,90 @@
+      * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+      }
+      
+      body { 
+      text-align: center;
+      font-family: Trebuchet MS;
+      }
+      
+      #intro {
+      
+      }
+      
+      #welcome{
+      font-size: 45px;
+      top: 15px;
+      padding: 15px;
+      }
+      
+      #info{
+      font-size: 25px;
+      padding: 10px;
+      }
+      
+      #moreInfo{
+      font-size: 18px;
+      padding: 10px;
+      }
+      
+      #form{
+      
+      }
+      
+      #n{
+      
+      }
+      
+	#join {
+	height: 25px;
+	width: 50px;
+	background-color:#ededed;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+	border-radius:15px;
+	border:1px solid #d6bcd6;
+	display:inline-block;
+	cursor:pointer;
+	color:#3a8a9e;
+	font-family:Arial;
+	font-size:17px;
+	
+	text-decoration:none;
+	}
+	#join:hover {
+	background-color:#bab1ba;
+	}
+	#join:active {
+	position:relative;
+	top:1px;
+	}
+      
+      #roomInfo{
+      padding: 30px;
+      }
+      
+      #rooms{
+      margin-left: auto;
+      margin-right: auto;
+      height: 300px;
+      width: 23%;
+      color: rgb(81, 127, 224);
+      list-style-type: none;
+      overflow: scroll;
+      border: solid;
+      border-color: black;
+      background: #B4B6BF;
+      }
+      
+      #rooms li { 
+      margin-left: auto;
+      margin-right: auto;
+      width: 95%;
+      padding: 10px;
+      border: outset; 
+      border-color: #92A5F7;
+      background: #eee; 
+      overflow: scroll;
+      }

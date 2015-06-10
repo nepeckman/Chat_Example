@@ -1,0 +1,40 @@
+doctype html
+html
+	head
+		title #{pageTitle}
+		link(href='http://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css')
+		style
+			include ../public/css/index_style.css
+	body
+		#intro
+			p#welcome Welcome to gnostic chat
+			p#info Enter the name of the chat room you want to join
+			p#moreInfo If it doesn't exist, it will be created!
+		script(src="https://cdn.socket.io/socket.io-1.2.0.js")
+		script(src="http://code.jquery.com/jquery-1.11.1.js")
+		script(type="text/javascript"). 
+			$(document).ready(function(){
+				var socket = io();
+				socket.on('roomlist', function(roomlist){
+					for (var idx = 0; idx < roomlist.length; idx++){
+						$('#rooms').append($('<li class="room">').text(roomlist[idx]));
+					}
+				});	
+				$('form').submit(function(){
+					location.href = "http://localhost:3000/chat/" + $("#n").val();
+					event.preventDefault();
+				});
+				$('li').click(function(){
+					console.log("hi");
+					var index = $('this').text().indexOf(":");
+					location.href = "http://localhost:3000/chat/" + $('this').text().substring(0, index);
+				});
+			});
+		form#form(action="")
+			input#n(autocomplete="off")
+			button#join Join
+		p#roomInfo Existing rooms:
+		ul#rooms
+		p#contact Send questions, suggestions, and bug reports to:
+		a(href="mailto:elijahpeckman@gmail.com") elijahpeckman@gmail.com
+		

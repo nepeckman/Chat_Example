@@ -1,0 +1,97 @@
+doctype html
+html
+	head
+		title #{pageTitle}
+		style
+			include ../public/css/chat_style.css
+	body
+		#top
+			form#username
+				p#welcome Please choose a username
+				button#change Change username
+				input#u(autocomplete="off")
+			p Now speaking in the <u><b>#{pageTitle}</b></u> room
+		div#userlist
+			u Users in this room:
+			ul#users
+		script(src="https://cdn.socket.io/socket.io-1.2.0.js")
+		script(src="http://code.jquery.com/jquery-1.11.1.js")
+		script(type="text/javascript"). 
+			var namespace = "#{namespace}";
+			var username;
+			$(document).ready(function(){
+				$('#username').submit(function(){
+					var free = true;
+					$('li.user').each(function(index){
+						if ($(this).text().toLowerCase() === $('#u').val().toLowerCase()){
+							$('#messages').append($('<li>').text("That name is taken!"));
+							free = false;
+						}
+					});
+					if (free){
+						socket.emit('username', $('#u').val(), username);
+						username = $('#u').val();
+						$('#welcome').text("Welcome, " + username);
+					}
+					return false;
+				});
+				var socket = io(namespace);
+				$('#chat').submit(function(){
+					if (username != undefined){
+						socket.emit('chat message', username + ": " + $('#m').val());
+					} else {
+						$('#messages').append($('<li>').text("Please choose a username!"));
+					}
+					$('#m').val('');
+					return false;
+				});
+				socket.on('chat message', function(msg){
+					$('#messages').append($('<li>').text(msg));
+				});
+				socket.on('usernames', function(names){
+					for (var idx = 0; idx < names.length; idx++){
+						if(names[idx] != undefined){
+							$('#users').append($('<li class="user">').text(names[idx]));
+						}
+					}
+					var $users = $('#users');
+					var $usersli = $users.children();
+					$usersli.sort(function(a, b){
+						var atext = $(a).text().toLowerCase();
+						var btext = $(b).text().toLowerCase();
+						if (atext> btext){ return 1;}
+						else if (atext< btext){return -1;}
+						else {return 0;}
+					});
+					$usersli.detach().appendTo($users);
+				});
+				socket.on('username', function(name, oldname){
+					$('li.user').each(function(index){
+						if ($(this).text() === oldname){
+							$(this).remove();
+						}
+					});
+					$('#users').append($('<li class="user">').text(name));
+					var $users = $('#users');
+					var $usersli = $users.children();
+					$usersli.sort(function(a, b){
+						var atext = $(a).text().toLowerCase();
+						var btext = $(b).text().toLowerCase();
+						if (atext> btext){ return 1;}
+						else if (atext< btext){return -1;}
+						else {return 0;}
+					});
+					$usersli.detach().appendTo($users);
+				});
+				socket.on('userGone', function(name){
+					$('li.user').each(function(index){
+						if ($(this).text() === name){
+							$(this).remove();
+						}
+					});
+				});
+			});
+		ul#messages
+		form#chat(action="")
+			input#m(autocomplete="off")
+			button#send Send
