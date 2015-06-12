@@ -7,12 +7,12 @@ html
 	body
 		#top
 			form#username
-				p#welcome Please choose a username
+				p#welcome Please choose a username to join the chat
 				button#change Change username
 				input#u(autocomplete="off")
 			p Now speaking in the <u><b>#{pageTitle}</b></u> room
 		div#userlist
-			u Users in this room:
+			p Users in this room:
 			ul#users
 		script(src="https://cdn.socket.io/socket.io-1.2.0.js")
 		script(src="http://code.jquery.com/jquery-1.11.1.js")
@@ -29,7 +29,7 @@ html
 						}
 					});
 					if (free){
-						socket.emit('username', $('#u').val(), username);
+						socket.emit('new name', $('#u').val(), username);
 						username = $('#u').val();
 						$('#welcome').text("Welcome, " + username);
 					}
@@ -65,7 +65,12 @@ html
 					});
 					$usersli.detach().appendTo($users);
 				});
-				socket.on('username', function(name, oldname){
+				socket.on('new name', function(name, oldname){
+					if(oldname === null){
+						$('#messages').append($('<li>').text(name + " has joined the room"));
+					} else {
+						$('#messages').append($('<li>').text(oldname + " is now called " + name));
+					}
 					$('li.user').each(function(index){
 						if ($(this).text() === oldname){
 							$(this).remove();
@@ -84,11 +89,14 @@ html
 					$usersli.detach().appendTo($users);
 				});
 				socket.on('userGone', function(name){
-					$('li.user').each(function(index){
-						if ($(this).text() === name){
-							$(this).remove();
-						}
-					});
+					if(name != null){
+						$('#messages').append($('<li>').text(name + " left the room"));
+						$('li.user').each(function(index){
+							if ($(this).text() === name){
+								$(this).remove();
+							}
+						});
+					}
 				});
 			});
 		ul#messages

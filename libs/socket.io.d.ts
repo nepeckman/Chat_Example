@@ -36,6 +36,7 @@ declare module SocketIO {
         of(nsp: string): Namespace;
         emit(name: string, ...args: any[]): Socket;
         use(fn: Function): Namespace;
+        nsps: Namespace[];
 
         on(event: 'connection', listener: (socket: Socket) => void): Namespace;
         on(event: 'connect', listener: (socket: Socket) => void): Namespace;

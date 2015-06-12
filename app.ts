@@ -15,7 +15,7 @@ app.set('view engine', 'jade');
    users and namespaces
 */
 
-var manager = new room_mod.roomManager();
+var manager = new room_mod.roomManager(io);
 
 app.get('/', function(req, res){
 	res.render('index', {pageTitle: 'index'});

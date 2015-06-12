@@ -11,7 +11,7 @@ app.set('view engine', 'jade');
 /* Uses custom classes to hold and access information about
    users and namespaces
 */
-var manager = new room_mod.roomManager();
+var manager = new room_mod.roomManager(io);
 app.get('/', function (req, res) {
     res.render('index', { pageTitle: 'index' });
 });

@@ -31,14 +31,15 @@ var Room = (function () {
             socket.on('chat message', function (msg) {
                 namespace.emit('chat message', msg);
             });
-            socket.on('username', function (username, oldname) {
+            socket.on('new name', function (username, oldname) {
                 room.nameChange(room.findUser(socket), username);
-                namespace.emit('username', username, oldname);
+                namespace.emit('new name', username, oldname);
             });
         });
         this.namespace = namespace;
     }
     Room.prototype.getRoomName = function () {
+        // Offset is to remove /chat/
         return this.namespace.name.substring(6, this.namespace.name.length);
     };
     Room.prototype.getNamespace = function () {
@@ -46,6 +47,16 @@ var Room = (function () {
     };
     Room.prototype.getNumberOfUsers = function () {
         return this.users.length;
+    };
+    Room.prototype.getNumberOfJoinedUsers = function () {
+        // Returns users who have 'joined' the chat by selecting a username
+        var joinedUsers = 0;
+        for (var idx = 0; idx < this.users.length; idx++) {
+            if (this.users[idx].getName() != null) {
+                joinedUsers++;
+            }
+        }
+        return joinedUsers;
     };
     Room.prototype.getUsernames = function () {
         var output = new Array();
@@ -62,12 +73,9 @@ var Room = (function () {
         if (index > -1) {
             this.users.splice(index, 1);
         }
-        /*
-        if (this.users.length < 1){
-            this.namespace = null;
+        if (this.users.length < 1) {
             this.manager.removeRoom(this);
         }
-        */
     };
     Room.prototype.nameChange = function (user, username) {
         user.setName(username);
@@ -83,13 +91,15 @@ var Room = (function () {
 })();
 exports.Room = Room;
 var roomManager = (function () {
-    function roomManager() {
+    function roomManager(server) {
         this.rooms = new Array();
+        this.server = server;
     }
     roomManager.prototype.addRoom = function (room) {
         this.rooms.push(room);
     };
     roomManager.prototype.removeRoom = function (room) {
+        delete this.server.nsps[room.getNamespace().name];
         var index = this.rooms.indexOf(room);
         if (index > -1) {
             this.rooms.splice(index, 1);
@@ -116,9 +126,9 @@ var roomManager = (function () {
         });
         var output = new Array();
         for (var idx = 0; idx < this.rooms.length; idx++) {
-            if (this.rooms[idx].getNumberOfUsers() > 0) {
+            if (this.rooms[idx].getNumberOfJoinedUsers() > 0) {
                 output.push(this.rooms[idx].getRoomName() + ": "
-                    + this.rooms[idx].getNumberOfUsers() + " users online");
+                    + this.rooms[idx].getNumberOfJoinedUsers() + " users online");
             }
         }
         return output;

@@ -57,15 +57,16 @@ export class Room {
 			socket.on('chat message', function(msg){
     			namespace.emit('chat message', msg);
   			});
-  			socket.on('username', function(username, oldname){
+  			socket.on('new name', function(username, oldname){
   				room.nameChange(room.findUser(socket), username);
-  				namespace.emit('username', username, oldname);
+  				namespace.emit('new name', username, oldname);
   			});
   		});	
   		this.namespace = namespace;
 	}
 	
 	getRoomName(): string{
+		// Offset is to remove /chat/
 		return this.namespace.name.substring(6, this.namespace.name.length);
 	}
 	
@@ -75,6 +76,17 @@ export class Room {
 	
 	getNumberOfUsers(): number{
 		return this.users.length;
+	}
+	
+	getNumberOfJoinedUsers(): number{
+		// Returns users who have 'joined' the chat by selecting a username
+		var joinedUsers = 0;
+		for(var idx = 0; idx < this.users.length; idx++){
+			if (this.users[idx].getName() != null){
+				joinedUsers++;
+			}
+		}
+		return joinedUsers;
 	}
 	
 	getUsernames(): string[]{
@@ -94,12 +106,10 @@ export class Room {
 		if (index > -1){
 			this.users.splice(index, 1);
 		}
-		/*
+		
 		if (this.users.length < 1){
-			this.namespace = null;
 			this.manager.removeRoom(this);
 		}
-		*/
 	}
 	
 	nameChange(user: User, username: string){
@@ -121,12 +131,15 @@ export class roomManager{
 	  It holds the rooms and allows access to their information.
 	  It checks for the existence of rooms.
 	  It listens and removes a room when users reaches 0.
+	  A server is encapsulated to allow deletion of namespaces.
 	*/
 	
 	rooms: Room[];
+	server: SocketIO.Server;
 	
-	constructor(){
+	constructor(server: SocketIO.Server){
 		this.rooms = new Array();
+		this.server = server;
 	}
 	
 	addRoom(room: Room){
@@ -134,6 +147,7 @@ export class roomManager{
 	}
 	
 	removeRoom(room: Room){
+		delete this.server.nsps[room.getNamespace().name];
 		var index: number = this.rooms.indexOf(room);
 		if (index > -1){
 			this.rooms.splice(index, 1);
@@ -163,9 +177,9 @@ export class roomManager{
 		});
 		var output = new Array();
 		for(var idx = 0; idx < this.rooms.length; idx++){
-			if(this.rooms[idx].getNumberOfUsers() > 0){
+			if(this.rooms[idx].getNumberOfJoinedUsers() > 0){
 				output.push(this.rooms[idx].getRoomName() + ": " 
-				+ this.rooms[idx].getNumberOfUsers() + " users online");
+				+ this.rooms[idx].getNumberOfJoinedUsers() + " users online");
 			}
 		}
 		return output;
