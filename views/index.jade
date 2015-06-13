@@ -21,14 +21,14 @@ html
 					}
 				});	
 				$('form').submit(function(){
-					location.href = "http://127.0.0.1:8080/chat/" + $("#n").val();
+					location.href = "http://nodejs-basicchat.rhcloud.com//chat/" + $("#n").val();
 					event.preventDefault();
 				});
 				$('#rooms').on('click', 'li', function(){
 					var $li = $(this);
 					console.log($li.text());
 					var index = $li.text().indexOf(":");
-					location.href = "http://127.0.0.1:8080/chat/" + $li.text().substring(0, index);
+					location.href = "http://nodejs-basicchat.rhcloud.com/chat/" + $li.text().substring(0, index);
 				});
 			});
 		form#form(action="")
