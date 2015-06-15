@@ -12,25 +12,8 @@ html
 			p#moreInfo If it doesn't exist, it will be created!
 		script(src="https://cdn.socket.io/socket.io-1.2.0.js")
 		script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js")
-		script(type="text/javascript").
-			$(document).ready(function(){
-				var socket = io();
-				socket.on('roomlist', function(roomlist){
-					for (var idx = 0; idx < roomlist.length; idx++){
-						$('#rooms').append($('<li class="room">').text(roomlist[idx]));
-					}
-				});	
-				$('form').submit(function(){
-					location.href = "http://nodejs-basicchat.rhcloud.com/chat/" + $("#n").val();
-					event.preventDefault();
-				});
-				$('#rooms').on('click', 'li', function(){
-					var $li = $(this);
-					console.log($li.text());
-					var index = $li.text().indexOf(":");
-					location.href = "http://nodejs-basicchat.rhcloud.com/chat/" + $li.text().substring(0, index);
-				});
-			});
+		script
+			include ../public/Javascript/index_client.js
 		form#form(action="")
 			input#n(autocomplete="off")
 			button#join Join
