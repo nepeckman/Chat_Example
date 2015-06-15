@@ -1324,7 +1324,13 @@ interface JQuery {
      * @param propertyName The name of the property to remove.
      */
     removeProp(propertyName: string): JQuery;
-
+	
+	/**
+	 * Sort objects using a comparator function
+	 * @param comparator The function that determines order.
+	 */
+	 sort(comparator: (a: any, b: any) => number): JQuery;
+	 
     /**
      * Add or remove one or more classes from each element in the set of matched elements, depending on either the class's presence or the value of the switch argument.
      *
