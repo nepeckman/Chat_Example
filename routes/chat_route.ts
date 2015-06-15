@@ -7,8 +7,7 @@ var router = express.Router();
 
 router.use(function(req, res, next){
 	var namespace = req.originalUrl;
-	res.render('../views/chat', {namespace: namespace,
-	pageTitle: namespace.substring(6, namespace.length)});
+	res.render('../views/chat', {pageTitle: namespace.substring(6, namespace.length)});
 	next();
 });
 
