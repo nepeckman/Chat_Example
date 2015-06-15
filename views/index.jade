@@ -12,8 +12,9 @@ html
 			p#moreInfo If it doesn't exist, it will be created!
 		script(src="https://cdn.socket.io/socket.io-1.2.0.js")
 		script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js")
-		script(type="text/javascript" src="../public/Javascript/client.js").
-			helloworld("hi"); 
+		script(type="text/javascript").
+			include ../public/Javascript/client.js
+			helloworld("hi");
 			$(document).ready(function(){
 				var socket = io();
 				socket.on('roomlist', function(roomlist){
