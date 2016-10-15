@@ -10,7 +10,7 @@ $(document).ready(function () {
     });
     // Moves user to chatroom upon room selection
     $('form').submit(function () {
-        location.href = "http://nodejs-basicchat.rhcloud.com/chat/" + $("#n").val();
+        location.href = "http://localhost:8080/chat/" + $("#n").val();
         event.preventDefault();
     });
     // Sets the room list objects to bring user to room upon click

@@ -15,7 +15,7 @@ $(document).ready(function(){
 	
 	// Moves user to chatroom upon room selection
 	$('form').submit(function(){
-		location.href = "http://nodejs-basicchat.rhcloud.com/chat/" + $("#n").val();
+	location.href = "http://localhost:8080/chat/" + $("#n").val();
 		event.preventDefault();
 	});
 	
